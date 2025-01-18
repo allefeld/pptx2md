@@ -164,7 +164,7 @@ def process_picture(config: ConversionConfig, shape, slide_idx) -> Union[ImageEl
         picture_count += 1
 
     # normal images
-    if pic_ext != 'wmf':
+    if config.disable_wmf or pic_ext != 'wmf':
         return ImageElement(path=img_outputter_path, width=config.image_width)
 
     # wmf images, try to convert, if failed, output as original
