@@ -152,7 +152,10 @@ def process_picture(config: ConversionConfig, shape, slide_idx) -> Union[ImageEl
 
     file_prefix = ''.join(os.path.basename(config.pptx_path).split('.')[:-1])
     pic_name = file_prefix + f'_{picture_count}'
-    pic_ext = shape.image.ext
+    if shape.image.filename:
+        pic_ext = shape.image.filename.split('.')[-1]
+    else:
+        pic_ext = shape.image.ext
     if not os.path.exists(config.image_dir):
         os.makedirs(config.image_dir)
 
@@ -164,7 +167,7 @@ def process_picture(config: ConversionConfig, shape, slide_idx) -> Union[ImageEl
         picture_count += 1
 
     # normal images
-    if config.disable_wmf or pic_ext != 'wmf':
+    if config.disable_wmf or (pic_ext != 'wmf' and pic_ext != 'emf'):
         return ImageElement(path=img_outputter_path, width=config.image_width)
 
     # wmf images, try to convert, if failed, output as original
